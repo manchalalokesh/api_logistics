@@ -2,13 +2,12 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-
 st.set_page_config(page_title="Supply Chain Dashboard", layout="wide")
 
 # ── Load Data ──────────────────────────────────────────────
 @st.cache_data
 def load_data():
-    df = pd.read_csv("APL-Logistics.csv", encoding="latin1")
+    df = pd.read_csv("APL_Logistics.csv", encoding="latin1")
     df["Days for shipping (real)"] = pd.to_numeric(df["Days for shipping (real)"], errors="coerce")
     df["Days for shipment (scheduled)"] = pd.to_numeric(df["Days for shipment (scheduled)"], errors="coerce")
     df["Order Profit Per Order"] = pd.to_numeric(df["Order Profit Per Order"], errors="coerce")
