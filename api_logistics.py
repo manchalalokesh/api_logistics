@@ -45,7 +45,9 @@ if selected_market != "All":
     filtered = filtered[filtered["Market"] == selected_market]
 if selected_segment != "All":
     filtered = filtered[filtered["Customer Segment"] == selected_segment]
-
+if filtered.empty:
+    st.warning("⚠️ No data found for this filter combination. Try different filters.")
+    st.stop()
 # ── MODULE 1: Delivery Performance Overview ────────────────
 st.header("📦 Module 1: Delivery Performance Overview")
 
@@ -62,13 +64,17 @@ col3.metric("📅 Avg Delivery Delay (Days)", f"{avg_delay:.2f}")
 st.subheader("Delivery Status Distribution")
 if "Delivery Status" in filtered.columns:
     status_counts = filtered["Delivery Status"].value_counts()
-    fig, ax = plt.subplots()
-    status_counts.plot(kind="bar", ax=ax, color="steelblue")
-    ax.set_xlabel("Delivery Status")
-    ax.set_ylabel("Count")
-    ax.set_title("Orders by Delivery Status")
-    plt.xticks(rotation=45)
-    st.pyplot(fig)
+    
+    if status_counts.empty:  # ← ADD THIS CHECK
+        st.warning("⚠️ No delivery data for selected filters.")
+    else:
+        fig, ax = plt.subplots()
+        status_counts.plot(kind="bar", ax=ax, color="steelblue")
+        ax.set_xlabel("Delivery Status")
+        ax.set_ylabel("Count")
+        ax.set_title("Orders by Delivery Status")
+        plt.xticks(rotation=45)
+        st.pyplot(fig)
 
 # ── MODULE 2: Delay Risk Analysis ─────────────────────────
 st.header("⚠️ Module 2: Delay Risk Analysis Dashboard")
